@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta_description %}
+    {{ product.description|truncatewords:155 }}
+{% endblock %}
+
+{% block title %}
+    {% if category %}
+        {{ product.name }}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div style="padding: 20px;">
+    <p><a href="{% url 'shop:allProdCat' %}">Home</a> | {{ product.name }}</p>
+    <div style="display: flex; justify-content: center;">
+        <div style="flex: 4; padding: 10px;">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width:300px; height:300px;">
+        </div>
+
+        <div style="flex: 8; padding: 10px;">
+            <br><br>
+            <h1>{{ product.name }}</h1>
+            <p>Price: Rs.{{ product.price }}</p>
+            <p style="text-align: justify;">{{ product.description }}</p>
+
+            {% if product.stock == 0 %}
+                <p style="text-align: center;"><b>Out of Stock</b></p>
+            {% else %}
+                <a href="{% url 'cart:add_cart' product.id %}" class="btn btn-secondary">Add to Cart</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Sticky Footer -->
+<footer style="position: absolute; bottom: 0; width: 100%; background-color: #f8f9fa; padding: 10px; text-align: center;">
+    &copy; Shoppy 2023
+</footer>
+{% endblock %}

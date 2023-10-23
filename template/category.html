@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+    {% if category %}
+        {{ category.description|truncatewords:155 }}
+    {% else %}
+        Welcome to Shoppy
+    {% endif %}
+{% endblock %}
+
+<!--/*** title ***/-->
+{% block title %}
+    {% if category %}
+        {{ category.name }} -- Shoppy
+    {% else %}
+        See our new collections -- Shoppy
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if category %}
+    <div>
+        <div class="row my_row_class">
+            <div class="mx-auto" >
+            <p><a href="{% url 'shop:allProdCat' %} ">Our Product Collections</a></p>
+        </div>
+    </div>
+     {% endif %}
+
+<div class="mx-auto">
+    {% if category %}
+        <img class="my_cat_image" src="{{ category.image.url }}" alt="{{ category.name }}">
+    </div>
+    <br>
+    <div>
+        <h1 class="text-center my_title">{{ category.name }}</h1>
+        <p class="text-justify">{{ category.description }}</p>
+    </div>
+    {% else %}
+        <div>
+            <img src="{% static 'img/banner.png' %}" alt="our products" width="1536px" height="350px">
+        </div>
+        <br>
+        <div>
+            <h1 class="text-center my_title">Our Product Collections</h1>
+            <p class="text-justify">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+        </div>
+    {% endif %}
+
+    <div class="container">
+        <div class="row mx-auto">
+            {% for product in products.object_list %}
+            <div class="my_bottom_margin col-12 col-sm-6 col-md-4 col-lg-3">
+
+                <div class="card text-center" style="max-width:18rem;">
+                    <a href="{% url 'shop:product_detail' product.id %}"><img class="card-img-top my_image" src="{{ product.image.url }}" alt="{{ product.name }}" width="250px" height="250px"></a>
+                    <div class="card-body">
+                        <h4>{{ product.name }}</h4>
+                        <p>Rs.{{ product.price }}</p>
+                        {% if product.stock == 0 %}
+                        <p><b>Out of Stock</b></p> <!-- Display "Out of Stock" when stock is zero -->
+                        {% else %}
+                        <a class="btn btn-primary" href="{% url 'shop:product_detail' product.id %}">Buy</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="mx-auto">
+            {% if products.paginator.num_pages > 1 %}
+            <hr>
+            <div class="text-center">
+                {% for pg in products.paginator.page_range %}
+                    <a href="?page={{pg}}" class="btn btn-light btn-sm {% if products.number == pg %} active {% endif %}">{{pg}}</a>
+                {% endfor %}
+            </div>
+        {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Add the footer section -->
+<footer class="footer text-center">
+    <p>&copy; Shoppy 2023 </p>
+</footer>
+{% endblock %}
